@@ -17,9 +17,7 @@
   ],
   "scripts": {
     "build": "tsc -p . --outDir esm && tsc -p . --module commonjs --outDir cjs",
-    "prepare": "yarn build",
-    "prepublishOnly": "node scripts/prepublish",
-    "postpublish": "node scripts/postpublish",
+    "prepare": "yarn build && node scripts/prepare",
     "test": "jest"
   },
   "dependencies": {
