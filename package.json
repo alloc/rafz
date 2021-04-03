@@ -4,29 +4,41 @@
   "description": "requestAnimationFrame for libraries",
   "author": "Alec Larson",
   "license": "MIT",
-  "repository": "pmndrs/rafz",
-  "main": "dist/raf.js",
-  "module": "dist/raf.mjs",
-  "types": "dist/raf.d.ts",
+  "repository": "alloc/rafz",
+  "main": "cjs/raf.js",
+  "module": "esm/raf.js",
   "files": [
     "src",
-    "dist"
+    "cjs",
+    "esm",
+    "jest",
+    "throttle",
+    "timeout"
   ],
   "scripts": {
-    "build": "rollup -c",
-    "prepare": "yarn build"
+    "build": "tsc -p . --outDir esm && tsc -p . --module commonjs --outDir cjs",
+    "prepare": "yarn build",
+    "prepublishOnly": "node scripts/prepublish",
+    "postpublish": "node scripts/postpublish",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react-batched-updates": "^1.0.0"
   },
   "devDependencies": {
-    "esbuild": "^0.7.11",
-    "prettier": "^2.0.5",
-    "rollup": "^2.23.0",
-    "rollup-plugin-dts": "^1.4.10",
-    "rollup-plugin-esbuild": "^2.4.2",
+    "@cush/exec": "^1.7.1",
+    "@types/jest": "^26.0.22",
+    "esbuild": "^0.11.3",
+    "esbuild-jest": "npm:@alloc/esbuild-jest@^0.3.5",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
+    "saxon": "^0.2.11",
     "typescript": "^4.0.0"
   },
   "keywords": [
     "raf",
     "requestAnimationFrame",
+    "frameloop",
     "animation",
     "tiny"
   ]

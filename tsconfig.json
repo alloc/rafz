@@ -1,11 +1,15 @@
 {
+  "include": ["src"],
   "compilerOptions": {
+    "declaration": true,
     "esModuleInterop": true,
     "jsx": "react",
     "lib": ["es2018", "dom"],
     "moduleResolution": "node",
     "noUnusedLocals": true,
+    "sourceMap": true,
     "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "typeRoots": ["./node_modules/@types"]
   }
 }
