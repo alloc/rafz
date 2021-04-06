@@ -45,4 +45,13 @@ export interface Rafz {
    * The error handler used when a queued function throws.
    */
   catch: (error: Error) => void
+
+  /**
+   * This is responsible for providing the current time,
+   * which is used when calculating the elapsed time.
+   *
+   * It defaults to `performance.now` when it exists,
+   * otherwise `Date.now` is used.
+   */
+  now: () => number
 }

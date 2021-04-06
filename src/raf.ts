@@ -19,6 +19,7 @@ raf.onFinish = fn => schedule(9, fn)
 
 raf.cancel = cancelStep
 raf.catch = console.error
+raf.now = now
 
 /** When non-zero, scheduled functions are called immediately. */
 let sync = 0
