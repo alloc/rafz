@@ -1,6 +1,13 @@
 let now = 0
 let queue: Function[] = []
 
+export interface MockRaf {
+  (cb: () => void): void
+  now(): number
+  step(options?: { count?: number; time?: number }): void
+  flush(): void
+}
+
 export function mockRaf(cb: () => void) {
   queue.push(cb)
 }
