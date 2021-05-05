@@ -1,6 +1,6 @@
 import { batchedUpdates } from 'react-batched-updates'
 import { startFrameLoop } from './loop'
-import { now } from './native'
+import { now, use } from './native'
 import { applySteps, cancelStep, getStep, onStep } from './step'
 import type { FrameFn, Rafz } from './types'
 
@@ -20,6 +20,7 @@ raf.onFinish = fn => schedule(9, fn)
 raf.cancel = cancelStep
 raf.catch = console.error
 raf.now = now
+raf.use = use
 
 /** When non-zero, scheduled functions are called immediately. */
 let sync = 0

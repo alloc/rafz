@@ -1,3 +1,5 @@
+export type NativeRaf = (cb: () => void) => void
+
 /**
  * Return a truthy value to be called again next frame.
  */
@@ -54,4 +56,9 @@ export interface Rafz {
    * otherwise `Date.now` is used.
    */
   now: () => number
+
+  /**
+   * Inject your own implementation of `requestAnimationFrame`
+   */
+  use: (nativeRaf: NativeRaf) => void
 }

@@ -1,9 +1,15 @@
-type NativeRaf = (cb: () => void) => void
+import { NativeRaf } from './types'
 
-export const nativeRaf =
-  typeof window != 'undefined'
-    ? (window.requestAnimationFrame as NativeRaf)
-    : () => {}
+let impl: NativeRaf
+if (typeof window != 'undefined') {
+  impl = window.requestAnimationFrame
+}
+
+export function use(nativeRaf: NativeRaf) {
+  impl = nativeRaf
+}
+
+export const nativeRaf: NativeRaf = cb => impl(cb)
 
 export const now =
   typeof performance != 'undefined' ? () => performance.now() : Date.now
