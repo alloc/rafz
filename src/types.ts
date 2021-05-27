@@ -1,9 +1,9 @@
-export type NativeRaf = (cb: () => void) => void
+export type NativeRaf = (cb: (timestamp: number) => void) => void
 
 /**
  * Return a truthy value to be called again next frame.
  */
-export type FrameFn = (dt: number, ts: number) => any
+export type FrameFn = (dt: number, clock: number) => any
 
 export interface Rafz {
   (update: FrameFn): void

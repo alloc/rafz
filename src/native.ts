@@ -10,6 +10,3 @@ export function use(nativeRaf: NativeRaf) {
 }
 
 export const nativeRaf: NativeRaf = cb => impl(cb)
-
-export const now =
-  typeof performance != 'undefined' ? () => performance.now() : Date.now

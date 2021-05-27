@@ -1,11 +1,10 @@
-import { now } from './native'
 import { onStep } from './step'
 import { raf, start } from './raf'
 
 let timeouts: Timeout[] = []
 
 raf.setTimeout = (handler, ms) => {
-  const time = now() + ms
+  const time = raf.now() + ms
   const cancel = () => {
     let i = timeouts.findIndex(t => t.cancel == cancel)
     if (~i) timeouts.splice(i, 1)
@@ -27,8 +26,8 @@ const findTimeout = (time: number) =>
   ~(~timeouts.findIndex(t => t.time > time) || ~timeouts.length)
 
 /** Flush timeouts whose time is up. */
-function flushTimeouts(_dt: number, ts: number) {
-  timeouts.splice(0, findTimeout(ts)).forEach(onTimeout)
+function flushTimeouts(_dt: number, clock: number) {
+  timeouts.splice(0, findTimeout(clock)).forEach(onTimeout)
   return timeouts.length
 }
 

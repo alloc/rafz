@@ -1,6 +1,6 @@
 import { batchedUpdates } from 'react-batched-updates'
 import { startFrameLoop } from './loop'
-import { now, use } from './native'
+import { use } from './native'
 import { applySteps, cancelStep, getStep, onStep } from './step'
 import type { FrameFn, Rafz } from './types'
 
@@ -19,7 +19,6 @@ raf.onFinish = fn => schedule(9, fn)
 
 raf.cancel = cancelStep
 raf.catch = console.error
-raf.now = now
 raf.use = use
 
 /** When non-zero, scheduled functions are called immediately. */
@@ -31,10 +30,14 @@ raf.sync = fn => {
   sync--
 }
 
+/** The last clock passed to `onUpdate` */
+let now = 0
+raf.now = () => now
+
 function schedule(i: number, fn: FrameFn) {
   if (sync) {
     cancelStep(fn)
-    if (!invoke(fn, 0, now())) {
+    if (!invoke(fn, 0, now)) {
       return
     }
   }
@@ -42,23 +45,25 @@ function schedule(i: number, fn: FrameFn) {
   start()
 }
 
-function invoke(fn: FrameFn, dt: number, ts: number) {
+function invoke(fn: FrameFn, dt: number, clock: number) {
   try {
-    return fn(dt, ts)
+    return fn(dt, clock)
   } catch (e) {
     raf.catch(e)
   }
 }
 
 /** This is called on every frame. */
-let onUpdate: (dt: number, ts: number) => void
+let onUpdate: (dt: number, clock: number) => void
 
 /** @internal */
 export const start = (): any =>
   onUpdate ||
   startFrameLoop(
-    (onUpdate = (dt, ts) =>
+    (onUpdate = (dt, clock) => {
+      now = clock
       applySteps(fn => {
-        invoke(fn, dt, ts) && onStep(getStep(), fn)
-      }))
+        invoke(fn, dt, clock) && onStep(getStep(), fn)
+      })
+    })
   )
