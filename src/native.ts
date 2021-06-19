@@ -1,9 +1,7 @@
 import { NativeRaf } from './types'
 
-let impl: NativeRaf
-if (typeof window != 'undefined') {
-  impl = window.requestAnimationFrame
-}
+let impl: NativeRaf =
+  (typeof window != 'undefined' && window.requestAnimationFrame) || (() => {})
 
 export function use(nativeRaf: NativeRaf) {
   impl = nativeRaf
