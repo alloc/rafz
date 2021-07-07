@@ -8,7 +8,7 @@ export interface MockRaf {
   flush(): void
 }
 
-export function mockRaf(cb: () => void) {
+export function mockRaf(cb: (now: number) => void) {
   queue.push(cb)
 }
 
