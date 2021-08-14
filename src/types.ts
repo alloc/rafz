@@ -1,7 +1,7 @@
 export type NativeRaf = (cb: (timestamp: number) => void) => void
 
 /**
- * Return a truthy value to be called again next frame.
+ * Return `true` to be called again next frame.
  */
 export type FrameFn = (dt: number, clock: number) => any
 
