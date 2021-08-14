@@ -37,7 +37,7 @@ raf.now = () => now
 function schedule(i: number, fn: FrameFn) {
   if (sync) {
     cancelStep(fn)
-    if (invoke(fn, 0, now) !== true) {
+    if (!invoke(fn, 0, now)) {
       return
     }
   }
@@ -47,7 +47,7 @@ function schedule(i: number, fn: FrameFn) {
 
 function invoke(fn: FrameFn, dt: number, clock: number) {
   try {
-    return fn(dt, clock)
+    return fn(dt, clock) === true
   } catch (e) {
     raf.catch(e)
   }
@@ -63,7 +63,7 @@ export const start = (): any =>
     (onUpdate = (dt, clock) => {
       now = clock
       applySteps(fn => {
-        invoke(fn, dt, clock) === true && onStep(getStep(), fn)
+        invoke(fn, dt, clock) && onStep(getStep(), fn)
       })
     })
   )
