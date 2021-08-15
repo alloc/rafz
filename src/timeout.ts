@@ -28,7 +28,7 @@ const findTimeout = (time: number) =>
 /** Flush timeouts whose time is up. */
 function flushTimeouts(_dt: number, clock: number) {
   timeouts.splice(0, findTimeout(clock)).forEach(onTimeout)
-  return timeouts.length
+  return timeouts.length > 0
 }
 
 /** Reuse this function for timeout handling. */
