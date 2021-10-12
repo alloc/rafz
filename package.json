@@ -39,5 +39,9 @@
     "frameloop",
     "animation",
     "tiny"
+  ],
+  "sideEffects": [
+    "esm/throttle.js",
+    "esm/timeout.js"
   ]
 }

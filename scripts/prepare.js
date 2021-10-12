@@ -17,7 +17,6 @@ subPackages.forEach(name => {
     version: require('../package.json').version,
     main: `../cjs/${name}.js`,
     module: `../esm/${name}.js`,
-    sideEffects: true,
   }
   fs.mkdir(name)
   fs.write(
