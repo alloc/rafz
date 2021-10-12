@@ -5,8 +5,8 @@
   "author": "Alec Larson",
   "license": "MIT",
   "repository": "alloc/rafz",
-  "main": "cjs/raf.js",
-  "module": "esm/raf.js",
+  "main": "cjs/rafz.js",
+  "module": "esm/rafz.js",
   "files": [
     "src",
     "cjs",
@@ -40,6 +40,24 @@
     "animation",
     "tiny"
   ],
+  "exports": {
+    ".": {
+      "import": "./esm/raf.js",
+      "require": "./cjs/raf.js"
+    },
+    "./jest": {
+      "import": "./esm/jest.js",
+      "require": "./cjs/jest.js"
+    },
+    "./throttle": {
+      "import": "./esm/throttle.js",
+      "require": "./cjs/throttle.js"
+    },
+    "./timeout": {
+      "import": "./esm/timeout.js",
+      "require": "./cjs/timeout.js"
+    }
+  },
   "sideEffects": [
     "esm/throttle.js",
     "esm/timeout.js"
