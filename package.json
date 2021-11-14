@@ -42,18 +42,22 @@
   ],
   "exports": {
     ".": {
+      "types": "./esm/raf.d.ts",
       "import": "./esm/raf.js",
       "require": "./cjs/raf.js"
     },
     "./jest": {
+      "types": "./esm/jest.d.ts",
       "import": "./esm/jest.js",
       "require": "./cjs/jest.js"
     },
     "./throttle": {
+      "types": "./esm/throttle.d.ts",
       "import": "./esm/throttle.js",
       "require": "./cjs/throttle.js"
     },
     "./timeout": {
+      "types": "./esm/timeout.d.ts",
       "import": "./esm/timeout.js",
       "require": "./cjs/timeout.js"
     }
