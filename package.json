@@ -5,8 +5,9 @@
   "author": "Alec Larson",
   "license": "MIT",
   "repository": "alloc/rafz",
-  "main": "cjs/rafz.js",
-  "module": "esm/rafz.js",
+  "main": "cjs/raf.js",
+  "module": "esm/raf.js",
+  "types": "esm/raf.d.ts",
   "files": [
     "src",
     "cjs",
