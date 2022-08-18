@@ -9,17 +9,20 @@ import {
 } from './step'
 import type { Rafz } from './types'
 
+const withStep = schedule.bind.bind(schedule as any, null) as {
+  (step: number): (effect: Rafz.Effect, prepend?: boolean) => void
+}
+
 /**
  * Schedule an update for next frame.
  * Your function can return `true` to repeat next frame.
  */
-export const raf = (effect => schedule(3, effect)) as Rafz
+export const raf = withStep(3) as Rafz
 
-raf.onStart = effect => schedule(1, effect)
-raf.onFrame = effect => schedule(5, effect)
-raf.write = effect => schedule(7, effect)
-raf.onFinish = effect => schedule(9, effect)
-
+raf.onStart = withStep(1)
+raf.onFrame = withStep(5)
+raf.write = withStep(7)
+raf.onFinish = withStep(9)
 raf.cancel = deleteStepEffect
 raf.catch = setCatchStep
 raf.now = () => frame.clock
@@ -33,7 +36,8 @@ raf.sync = fn => {
   sync--
 }
 
-function schedule(step: number, effect: Rafz.Effect) {
+function schedule(step: number, effect: Rafz.Effect, prepend?: boolean) {
+  prepend && step--
   if (sync) {
     deleteStepEffect(effect)
     applyStepEffect(step, effect, instantFrame) && startFrameLoop()

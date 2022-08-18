@@ -1,7 +1,7 @@
 export type NativeRaf = (cb: (timestamp: number) => void) => void
 
 export interface Rafz {
-  (update: Rafz.Effect): void
+  (update: Rafz.Effect, prepend?: boolean): void
 
   /**
    * Prevent a queued call for any step.
@@ -15,22 +15,22 @@ export interface Rafz {
    * To avoid performance issues, all mutations are batched with this function.
    * If the update loop is dormant, it will be started when you call this.
    */
-  write: (fn: Rafz.Effect) => void
+  write: (fn: Rafz.Effect, prepend?: boolean) => void
 
   /**
    * Run a function before updates are flushed.
    */
-  onStart: (fn: Rafz.Effect) => void
+  onStart: (fn: Rafz.Effect, prepend?: boolean) => void
 
   /**
    * Run a function before writes are flushed.
    */
-  onFrame: (fn: Rafz.Effect) => void
+  onFrame: (fn: Rafz.Effect, prepend?: boolean) => void
 
   /**
    * Run a function after writes are flushed.
    */
-  onFinish: (fn: Rafz.Effect) => void
+  onFinish: (fn: Rafz.Effect, prepend?: boolean) => void
 
   /**
    * Any function scheduled within the given callback is run immediately.
