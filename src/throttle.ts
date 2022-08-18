@@ -27,12 +27,3 @@ export function rafThrottle<T extends VoidFn>(fn: T): Rafz.Throttled<T> {
   }
   return throttled as any
 }
-
-declare module './types' {
-  namespace Rafz {
-    export type Throttled<T extends VoidFn> = T & {
-      handler: T
-      cancel: () => void
-    }
-  }
-}

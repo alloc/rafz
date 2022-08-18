@@ -42,12 +42,3 @@ function onTimeout(t: Rafz.Timeout) {
   applyStepEffect(0, t.handler, frame)
 }
 
-declare module './types' {
-  namespace Rafz {
-    export interface Timeout {
-      time: number
-      handler: () => void
-      cancel: () => void
-    }
-  }
-}

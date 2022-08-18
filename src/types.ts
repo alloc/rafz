@@ -63,8 +63,28 @@ export namespace Rafz {
     /** Sum of `dt` over time */
     clock: number
   }
+
   /**
    * Return `true` to be called again next frame.
    */
   export type Effect = (frame: Frame) => any
+
+  /**
+   * Timeout object returned from `rafTimeout`
+   */
+  export interface Timeout {
+    time: number
+    handler: () => void
+    cancel: () => void
+  }
+
+  type VoidFn = (...args: any[]) => undefined | void
+
+  /**
+   * Throttled function returned from `rafThrottle`
+   */
+  export type Throttled<T extends VoidFn> = T & {
+    handler: T
+    cancel: () => void
+  }
 }
