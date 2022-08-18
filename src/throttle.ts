@@ -1,8 +1,13 @@
 import { raf } from './raf'
+import type { Rafz } from './types'
 
 type VoidFn = (...args: any[]) => undefined | void
 
-raf.throttle = fn => {
+/**
+ * Wrap a function so its execution is limited to once per frame. If called
+ * more than once in a single frame, the last call's arguments are used.
+ */
+export function rafThrottle<T extends VoidFn>(fn: T): Rafz.Throttled<T> {
   let lastArgs: any
   function queuedFn() {
     try {
@@ -23,17 +28,11 @@ raf.throttle = fn => {
   return throttled as any
 }
 
-export type Throttled<T extends VoidFn> = T & {
-  handler: T
-  cancel: () => void
-}
-
 declare module './types' {
-  interface Rafz {
-    /**
-     * Wrap a function so its execution is limited to once per frame. If called
-     * more than once in a single frame, the last call's arguments are used.
-     */
-    throttle: <T extends VoidFn>(fn: T) => Throttled<T>
+  namespace Rafz {
+    export type Throttled<T extends VoidFn> = T & {
+      handler: T
+      cancel: () => void
+    }
   }
 }

@@ -1,26 +1,39 @@
 import { batchedUpdates } from 'react-batched-updates'
 import { nativeRaf } from './native'
+import { applyCurrentFrame, hasStepEffects } from './step'
+import { Rafz } from './types'
 
-export function startFrameLoop(onUpdate: (dt: number, clock: number) => void) {
-  // Latest timestamp from nativeRaf
-  let ts = -1
-  // Delta time from last frame to this frame
-  let dt: number
-  // Sum of dt over time
-  let clock = 0
+const initialFrame: Rafz.Frame = { ts: -1, dt: 0, clock: 0 }
 
-  function update() {
-    onUpdate((dt = Math.min(64, dt)), (clock += dt))
-  }
+/** For synchronous effects, the frame state is all zeroes. */
+export const instantFrame: Rafz.Frame = { ...initialFrame, ts: 0 }
 
-  nativeRaf(function loop(now) {
-    nativeRaf(loop)
+/** The current frame state */
+export const frame = { ...initialFrame }
 
-    dt = ts >= 0 ? now - ts : 0
-    ts = now
+let loop: ((now: number) => void) | undefined
 
-    // The first call is a no-op since we have no
-    // reference time to calculate the delta time.
-    dt && batchedUpdates(update)
-  })
+/** @internal */
+export const startFrameLoop = (): any =>
+  loop ||
+  nativeRaf(
+    (loop = now => {
+      if (loop && hasStepEffects()) {
+        nativeRaf(loop)
+
+        frame.dt = frame.ts >= 0 ? Math.min(64, now - frame.ts) : 0
+        frame.clock += frame.dt
+        frame.ts = now
+
+        batchedUpdates(applyCurrentFrame)
+      } else {
+        stopFrameLoop()
+      }
+    })
+  )
+
+/** @internal */
+export function stopFrameLoop() {
+  Object.assign(frame, initialFrame)
+  loop = undefined
 }

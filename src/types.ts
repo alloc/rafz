@@ -1,12 +1,7 @@
 export type NativeRaf = (cb: (timestamp: number) => void) => void
 
-/**
- * Return `true` to be called again next frame.
- */
-export type FrameFn = (dt: number, clock: number) => any
-
 export interface Rafz {
-  (update: FrameFn): void
+  (update: Rafz.Effect): void
 
   /**
    * Prevent a queued call for any step.
@@ -14,28 +9,28 @@ export interface Rafz {
    * it won't be cancelled for that step, but it will be
    * for any other step.
    */
-  cancel: (fn: FrameFn) => void
+  cancel: (fn: Rafz.Effect) => void
 
   /**
    * To avoid performance issues, all mutations are batched with this function.
    * If the update loop is dormant, it will be started when you call this.
    */
-  write: (fn: FrameFn) => void
+  write: (fn: Rafz.Effect) => void
 
   /**
    * Run a function before updates are flushed.
    */
-  onStart: (fn: FrameFn) => void
+  onStart: (fn: Rafz.Effect) => void
 
   /**
    * Run a function before writes are flushed.
    */
-  onFrame: (fn: FrameFn) => void
+  onFrame: (fn: Rafz.Effect) => void
 
   /**
    * Run a function after writes are flushed.
    */
-  onFinish: (fn: FrameFn) => void
+  onFinish: (fn: Rafz.Effect) => void
 
   /**
    * Any function scheduled within the given callback is run immediately.
@@ -44,16 +39,12 @@ export interface Rafz {
   sync: (fn: () => void) => void
 
   /**
-   * The error handler used when a queued function throws.
+   * Set the error handler used when a queued function throws.
    */
-  catch: (error: Error) => void
+  catch: (fn: (error: any) => void) => void
 
   /**
-   * This is responsible for providing the current time,
-   * which is used when calculating the elapsed time.
-   *
-   * It defaults to `performance.now` when it exists,
-   * otherwise `Date.now` is used.
+   * The sum of `frame.dt` values since the frameloop began.
    */
   now: () => number
 
@@ -61,4 +52,19 @@ export interface Rafz {
    * Inject your own implementation of `requestAnimationFrame`
    */
   use: (nativeRaf: NativeRaf) => void
+}
+
+export namespace Rafz {
+  export interface Frame {
+    /** Latest timestamp from `nativeRaf` */
+    ts: number
+    /** Delta time from last frame to this frame */
+    dt: number
+    /** Sum of `dt` over time */
+    clock: number
+  }
+  /**
+   * Return `true` to be called again next frame.
+   */
+  export type Effect = (frame: Frame) => any
 }

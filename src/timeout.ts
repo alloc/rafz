@@ -1,9 +1,15 @@
-import { onStep } from './step'
-import { raf, start } from './raf'
+import { addStepEffect, applyStepEffect } from './step'
+import { raf } from './raf'
+import type { Rafz } from './types'
+import { frame, startFrameLoop } from './loop'
 
-let timeouts: Timeout[] = []
+let timeouts: Rafz.Timeout[] = []
 
-raf.setTimeout = (handler, ms) => {
+/**
+ * Run a function on the soonest frame after the given time has passed,
+ * and before any updates on that particular frame.
+ */
+export function rafTimeout(handler: () => void, ms: number) {
   const time = raf.now() + ms
   const cancel = () => {
     let i = timeouts.findIndex(t => t.cancel == cancel)
@@ -11,11 +17,11 @@ raf.setTimeout = (handler, ms) => {
   }
 
   if (!timeouts.length) {
-    onStep(0, flushTimeouts)
-    start()
+    addStepEffect(0, flushTimeouts)
+    startFrameLoop()
   }
 
-  const timeout: Timeout = { time, handler, cancel }
+  const timeout: Rafz.Timeout = { time, handler, cancel }
   timeouts.splice(findTimeout(time), 0, timeout)
 
   return timeout
@@ -26,32 +32,22 @@ const findTimeout = (time: number) =>
   ~(~timeouts.findIndex(t => t.time > time) || ~timeouts.length)
 
 /** Flush timeouts whose time is up. */
-function flushTimeouts(_dt: number, clock: number) {
-  timeouts.splice(0, findTimeout(clock)).forEach(onTimeout)
+function flushTimeouts(frame: Rafz.Frame) {
+  timeouts.splice(0, findTimeout(frame.clock)).forEach(onTimeout)
   return timeouts.length > 0
 }
 
 /** Reuse this function for timeout handling. */
-function onTimeout(t: Timeout) {
-  try {
-    t.handler()
-  } catch (e) {
-    raf.catch(e)
-  }
-}
-
-export interface Timeout {
-  time: number
-  handler: () => void
-  cancel: () => void
+function onTimeout(t: Rafz.Timeout) {
+  applyStepEffect(0, t.handler, frame)
 }
 
 declare module './types' {
-  interface Rafz {
-    /**
-     * Run a function on the soonest frame after the given time has passed,
-     * and before any updates on that particular frame.
-     */
-    setTimeout: (handler: () => void, ms: number) => Timeout
+  namespace Rafz {
+    export interface Timeout {
+      time: number
+      handler: () => void
+      cancel: () => void
+    }
   }
 }
