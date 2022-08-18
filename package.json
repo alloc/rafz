@@ -5,9 +5,18 @@
   "author": "Alec Larson",
   "license": "MIT",
   "repository": "alloc/rafz",
-  "main": "cjs/raf.js",
-  "module": "esm/raf.js",
-  "types": "esm/raf.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/rafz.d.ts",
+      "import": "./dist/rafz.mjs",
+      "default": "./dist/rafz.js"
+    },
+    "./jest": {
+      "types": "./dist/rafz-jest.d.ts",
+      "import": "./dist/rafz-jest.mjs",
+      "require": "./dist/rafz-jest.js"
+    }
+  },
   "files": [
     "src",
     "cjs",
@@ -17,8 +26,9 @@
     "timeout"
   ],
   "scripts": {
-    "build": "tsc -p . --outDir esm && tsc -p . --module commonjs --outDir cjs",
-    "prepare": "yarn build && node scripts/prepare",
+    "dev": "tsup --watch --sourcemap",
+    "build": "tsup",
+    "prepare": "node scripts/prepare && tsup",
     "test": "jest"
   },
   "dependencies": {
@@ -30,9 +40,9 @@
     "esbuild": "^0.11.3",
     "esbuild-jest": "npm:@alloc/esbuild-jest@^0.3.5",
     "jest": "^26.6.3",
-    "kleur": "^4.1.5",
     "prettier": "^2.2.1",
     "saxon": "^0.2.11",
+    "tsup": "^6.2.2",
     "typescript": "^4.0.0"
   },
   "keywords": [
@@ -42,28 +52,6 @@
     "animation",
     "tiny"
   ],
-  "exports": {
-    ".": {
-      "types": "./esm/raf.d.ts",
-      "import": "./esm/raf.js",
-      "require": "./cjs/raf.js"
-    },
-    "./jest": {
-      "types": "./esm/jest.d.ts",
-      "import": "./esm/jest.js",
-      "require": "./cjs/jest.js"
-    },
-    "./throttle": {
-      "types": "./esm/throttle.d.ts",
-      "import": "./esm/throttle.js",
-      "require": "./cjs/throttle.js"
-    },
-    "./timeout": {
-      "types": "./esm/timeout.d.ts",
-      "import": "./esm/timeout.js",
-      "require": "./cjs/timeout.js"
-    }
-  },
   "sideEffects": [
     "esm/throttle.js",
     "esm/timeout.js"
