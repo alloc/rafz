@@ -1,6 +1,5 @@
 node_modules
-cjs/
-esm/
+dist/
 jest/
 throttle/
 timeout/
