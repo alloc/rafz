@@ -18,12 +18,7 @@
     }
   },
   "files": [
-    "src",
-    "cjs",
-    "esm",
-    "jest",
-    "throttle",
-    "timeout"
+    "dist"
   ],
   "scripts": {
     "dev": "tsup --watch --sourcemap",
